@@ -23,7 +23,7 @@
 
 </body> -->
 
-<a id="button1"><button>button1</button></a>
+<a id="button1"><button>button</button></a>
 
 </body>
 
@@ -32,6 +32,7 @@
     function buttonClick () {
         let el = document.createElement("button")
         // el.href = "./otherpage.html"
+        el.innerText = "button"
         el.style.position = "absolute"
         el.style.left = Math.random() * window.innerWidth + "px"
         el.style.top = Math.random() * window.innerHeight + "px"
