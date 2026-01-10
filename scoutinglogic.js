@@ -1,7 +1,8 @@
 function tick() {
     requestAnimationFrame(tick)
 
-    console.log("smth")
+    alert("HELP ME")
+    // console.log("smth")
 
 }
 
