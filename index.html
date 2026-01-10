@@ -19,21 +19,23 @@
     AAAAAAAAAAAAAAAAAAAAAAAAAAAAA<br>
     <img src="./OIP.webp">
 </button> -->
-<a href="./otherpage.html"><button>button1</button></a>
-
-</body>
-
-<a href="./otherpage.html"><button>button2</button></a>
-
-</body>
-
-<a href="./otherpage.html"><button>button3</button></a>
+<a id="button1" href="./otherpage.html"><button>button1</button></a>
 
 </body>
 
 
 <script src="scoutinglogic.js"></script>
 <script>
+    function buttonClick () {
+        let el = document.createElement("button")
+        el.href = "./otherpage.html"
+        el.style.position = "absolute"
+        el.style.left = Math.random() * window.innerWidth + "px"
+        el.style.top = Math.random() * window.innerHeight + "px"
+        el.onclick = () => buttonClick()
+        document.body.append(el)
+    }
+    button1.onclick = () => buttonClick()
 
     // myButton.addEventListener('click', function(obj) {
     //     while (true) location.reload()
