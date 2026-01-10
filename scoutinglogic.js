@@ -9,4 +9,4 @@ function tick() {
 
 }
 
-tick()
+onload = () => tick()
