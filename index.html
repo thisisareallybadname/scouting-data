@@ -20,21 +20,13 @@
     <img src="./OIP.webp">
 </button id="button1" href="./otherpage.html"><button>button1</button></a>
 
-<a id="button1"><button>button1</button></a>
+    <label for ="namebox"> Name:</label>
+    <input type="text" id="namebox" placeholder="Enter your name">
 
+    <input type="radio" name="op1" id = "radio" name = "option1" value="option1">
+    <input type="radio" name="op2" id = "radio" name = "option2" value="option2">
+    <input type="radio" name="op3" id = "radio" name = "option3" value="option3">
+    <input type="radio" name="op4" id = "radio" name = "option4" value="option4">
 </body>
 
 <script src="scoutinglogic.js"></script>
-<script>
-    function buttonClick () {
-        let el = document.createElement("button")
-        // el.href = "./otherpage.html"
-        el.innerText
-        el.style.position = "absolute"
-        el.style.left = Math.random() * window.innerWidth + "px"
-        el.style.top = Math.random() * window.innerHeight + "px"
-        el.onclick = () => buttonClick()
-        document.body.append(el)
-    }
-    button1.onclick = () => buttonClick()
-</script>
