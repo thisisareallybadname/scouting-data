@@ -1,0 +1,109 @@
+const bg = document.getElementById("bg");
+const draw = document.getElementById("draw");
+
+const bgCtx = bg.getContext("2d");
+const drawCtx = draw.getContext("2d");
+
+const color = document.getElementById("color");
+const size = document.getElementById("size");
+const clearBtn = document.getElementById("clear");
+const penBtn = document.getElementById("pen");
+const eraserBtn = document.getElementById("eraser");
+
+let mode = "pen"; // "pen" or "eraser"
+
+penBtn.onclick = () => mode = "pen";
+eraserBtn.onclick = () => mode = "eraser";
+
+function resize() {
+  const saved = draw.toDataURL();
+
+  bg.width = draw.width = window.innerWidth;
+  bg.height = draw.height = window.innerHeight - 50;
+
+  drawBackground();
+  restore(saved);
+}
+
+function drawBackground() {
+  // Example background
+  bgCtx.fillStyle = "#fafafa";
+  bgCtx.fillRect(0, 0, bg.width, bg.height);
+
+  // You can replace with an image:
+  // const img = new Image();
+  // img.onload = () => bgCtx.drawImage(img, 0, 0, bg.width, bg.height);
+  // img.src = "background.png";
+}
+
+function restore(data) {
+  if (!data) return;
+  const img = new Image();
+  img.onload = () => drawCtx.drawImage(img, 0, 0);
+  img.src = data;
+}
+
+window.addEventListener("resize", resize);
+resize();
+
+let drawing = false;
+let lastX = 0, lastY = 0;
+
+function start(x, y) {
+  drawing = true;
+  lastX = x; lastY = y;
+}
+
+function drawLine(x, y) {
+  if (!drawing) return;
+
+  if (mode === "pen") {
+    drawCtx.globalCompositeOperation = "source-over";
+    drawCtx.strokeStyle = color.value;
+  } else {
+    drawCtx.globalCompositeOperation = "destination-out";
+  }
+
+  drawCtx.lineWidth = size.value;
+  drawCtx.lineCap = "round";
+
+  drawCtx.beginPath();
+  drawCtx.moveTo(lastX, lastY);
+  drawCtx.lineTo(x, y);
+  drawCtx.stroke();
+
+  lastX = x; lastY = y;
+}
+
+function stop() {
+  drawing = false;
+  save();
+}
+
+draw.addEventListener("mousedown", e => start(e.offsetX, e.offsetY));
+draw.addEventListener("mousemove", e => drawLine(e.offsetX, e.offsetY));
+draw.addEventListener("mouseup", stop);
+draw.addEventListener("mouseleave", stop);
+
+// Touch support
+draw.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  const rect = draw.getBoundingClientRect();
+  start(t.clientX - rect.left, t.clientY - rect.top);
+});
+
+draw.addEventListener("touchmove", e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  const rect = draw.getBoundingClientRect();
+  drawLine(t.clientX - rect.left, t.clientY - rect.top);
+}, { passive: false });
+
+draw.addEventListener("touchend", stop);
+
+clearBtn.onclick = () => {
+  drawCtx.clearRect(0, 0, draw.width, draw.height);
+  save();
+};
+
+const KEY = "drawing-layer
