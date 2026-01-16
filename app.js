@@ -11,9 +11,19 @@ const penBtn = document.getElementById("pen");
 const eraserBtn = document.getElementById("eraser");
 
 let mode = "pen"; // "pen" or "eraser"
+const KEY = "drawing-layer";
 
-penBtn.onclick = () => mode = "pen";
-eraserBtn.onclick = () => mode = "eraser";
+penBtn.onclick = () => {
+  mode = "pen";
+  penBtn.classList.add("active");
+  eraserBtn.classList.remove("active");
+};
+
+eraserBtn.onclick = () => {
+  mode = "eraser";
+  eraserBtn.classList.add("active");
+  penBtn.classList.remove("active");
+};
 
 function resize() {
   const saved = draw.toDataURL();
@@ -26,14 +36,12 @@ function resize() {
 }
 
 function drawBackground() {
-  // Example background
-  bgCtx.fillStyle = "#fafafa";
-  bgCtx.fillRect(0, 0, bg.width, bg.height);
-
-  // You can replace with an image:
-  // const img = new Image();
-  // img.onload = () => bgCtx.drawImage(img, 0, 0, bg.width, bg.height);
-  // img.src = "background.png";
+  const img = new Image();
+  img.onload = () => {
+    bgCtx.clearRect(0, 0, bg.width, bg.height);
+    bgCtx.drawImage(img, 0, 0, bg.width, bg.height);
+  };
+  img.src = "placeholder.png"; // make sure this file exists
 }
 
 function restore(data) {
@@ -51,7 +59,8 @@ let lastX = 0, lastY = 0;
 
 function start(x, y) {
   drawing = true;
-  lastX = x; lastY = y;
+  lastX = x;
+  lastY = y;
 }
 
 function drawLine(x, y) {
@@ -72,10 +81,12 @@ function drawLine(x, y) {
   drawCtx.lineTo(x, y);
   drawCtx.stroke();
 
-  lastX = x; lastY = y;
+  lastX = x;
+  lastY = y;
 }
 
 function stop() {
+  if (!drawing) return;
   drawing = false;
   save();
 }
@@ -106,4 +117,17 @@ clearBtn.onclick = () => {
   save();
 };
 
-const KEY = "drawing-layer
+function save() {
+  try {
+    localStorage.setItem(KEY, draw.toDataURL());
+  } catch (e) {
+    console.warn("Could not save drawing", e);
+  }
+}
+
+function load() {
+  const data = localStorage.getItem(KEY);
+  if (data) restore(data);
+}
+
+load();
