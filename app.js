@@ -37,9 +37,13 @@ function resize() {
 
 function drawBackground() {
   const img = new Image();
+
+  const x = 300;
+  const y = 200;
+
   img.onload = () => {
     bgCtx.clearRect(0, 0, bg.width, bg.height);
-    bgCtx.drawImage(img, 0, 0, bg.width, bg.height);
+    bgCtx.drawImage(img, 0, 0, this.width, this.height);
   };
   img.src = "placeholder.png"; // make sure this file exists
 }
