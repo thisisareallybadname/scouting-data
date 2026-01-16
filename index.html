@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 
 
 
@@ -29,6 +29,128 @@
     <input type="radio" name="op" id = "radio" name = "option2" value="option2">
     <input type="radio" name="op" id = "radio" name = "option3" value="option3">
     <input type="radio" name="op" id = "radio" name = "option4" value="option4">
+
+    <br><br>
+
+    <details> <summary>Click to expand</summary> <p>This is the hidden content that appears when expanded.</p> </details>
 </body>
 
-<script src="scoutinglogic.js"></script>
+<script src="scoutinglogic.js"></script> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Web Sketchpad</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .toolbar {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        canvas {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 4px;
+            cursor: crosshair;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background: #fff;
+        }
+        button:hover { background: #eee; }
+        .save-btn { background: #28a745; color: white; border: none; }
+        .save-btn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <input type="color" id="colorPicker" value="#000000">
+        <input type="range" id="lineWidth" min="1" max="20" value="5">
+        <button id="clearBtn">Clear Canvas</button>
+        <button id="saveBtn" class="save-btn">Save as Image</button>
+    </div>
+
+    <canvas id="drawingCanvas" width="800" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        const lineWidth = document.getElementById('lineWidth');
+        const clearBtn = document.getElementById('clearBtn');
+        const saveBtn = document.getElementById('saveBtn');
+
+        let painting = false;
+
+        // Initialize Canvas
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        function startPosition(e) {
+            painting = true;
+            draw(e);
+        }
+
+        function finishedPosition() {
+            painting = false;
+            ctx.beginPath(); // Resets the path so lines don't connect
+        }
+
+        function draw(e) {
+            if (!painting) return;
+
+            // Get correct mouse coordinates relative to canvas
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            ctx.lineWidth = lineWidth.value;
+            ctx.strokeStyle = colorPicker.value;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        // Event Listeners
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', finishedPosition);
+        canvas.addEventListener('mousemove', draw);
+
+        // Clear Canvas
+        clearBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Save Image Function
+        saveBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'my-drawing.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+</html>
