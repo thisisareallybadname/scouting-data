@@ -43,7 +43,7 @@ function drawBackground() {
 
   img.onload = () => {
     bgCtx.clearRect(0, 0, bg.width, bg.height);
-    bgCtx.drawImage(img, 0, 0, x, y);
+    bgCtx.drawImage(img, 0, 0, bg.width, bg.height);
   };
   img.src = "placeholder.png"; // make sure this file exists
 }
