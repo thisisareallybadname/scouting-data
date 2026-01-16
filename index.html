@@ -37,120 +37,49 @@
 
 <script src="scoutinglogic.js"></script> -->
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS Web Sketchpad</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
-        .toolbar {
-            margin-bottom: 10px;
-            display: flex;
-            gap: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        canvas {
-            background: white;
-            border: 2px solid #333;
-            border-radius: 4px;
-            cursor: crosshair;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        button {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            background: #fff;
-        }
-        button:hover { background: #eee; }
-        .save-btn { background: #28a745; color: white; border: none; }
-        .save-btn:hover { background: #218838; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Offline Drawing App</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #333; }
+    #toolbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: #ddd; padding: 8px;
+      display: flex; gap: 10px; align-items: center;
+      font-family: sans-serif;
+      z-index: 10;
+    }
+    #container {
+      position: absolute;
+      top: 50px; left: 0;
+    }
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      display: block;
+    }
+    button.active {
+      background: #aaa;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="toolbar">
-        <input type="color" id="colorPicker" value="#000000">
-        <input type="range" id="lineWidth" min="1" max="20" value="5">
-        <button id="clearBtn">Clear Canvas</button>
-        <button id="saveBtn" class="save-btn">Save as Image</button>
-    </div>
+  <div id="toolbar">
+    <label>Color: <input type="color" id="color" value="#000000"></label>
+    <label>Size: <input type="range" id="size" min="1" max="40" value="5"></label>
+    <button id="pen" class="active">Pen</button>
+    <button id="eraser">Eraser</button>
+    <button id="clear">Clear</button>
+  </div>
 
-    <canvas id="drawingCanvas" width="800" height="500"></canvas>
+  <div id="container">
+    <canvas id="bg"></canvas>
+    <canvas id="draw"></canvas>
+  </div>
 
-    <script>
-        const canvas = document.getElementById('drawingCanvas');
-        const ctx = canvas.getContext('2d');
-        const colorPicker = document.getElementById('colorPicker');
-        const lineWidth = document.getElementById('lineWidth');
-        const clearBtn = document.getElementById('clearBtn');
-        const saveBtn = document.getElementById('saveBtn');
-
-        let painting = false;
-
-        // Initialize Canvas
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        function startPosition(e) {
-            painting = true;
-            draw(e);
-        }
-
-        function finishedPosition() {
-            painting = false;
-            ctx.beginPath(); // Resets the path so lines don't connect
-        }
-
-        function draw(e) {
-            if (!painting) return;
-
-            // Get correct mouse coordinates relative to canvas
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            ctx.lineWidth = lineWidth.value;
-            ctx.strokeStyle = colorPicker.value;
-
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
-
-        // Event Listeners
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', finishedPosition);
-        canvas.addEventListener('mousemove', draw);
-
-        // Clear Canvas
-        clearBtn.addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        });
-
-        // Save Image Function
-        saveBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'my-drawing.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    </script>
+  <script src="app.js"></script>
 </body>
 </html>
